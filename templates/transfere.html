@@ -1,0 +1,24 @@
+<!-- templates/transfer.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transfer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="form-container">
+        <h1>Transfer</h1>
+        <form action="/transfer" method="post">
+            <label for="from_account_id">From Account ID</label>
+            <input type="number" id="from_account_id" name="from_account_id" required>
+            <label for="to_account_id">To Account ID</label>
+            <input type="number" id="to_account_id" name="to_account_id" required>
+            <label for="amount">Amount</label>
+            <input type="number" id="amount" name="amount" required>
+            <button type="submit">Transfer</button>
+        </form>
+    </div>
+</body>
+</html>
