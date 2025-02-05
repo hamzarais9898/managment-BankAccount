@@ -1,22 +1,27 @@
+from getpass import getuser
 import mysql.connector as my
 from myapp.Models.accountModel import * 
 from decimal import Decimal
-from myapp.Dal.cnxDal import Database 
+from myapp.Dal.cnxDal import Database
+from myapp.Dal.userDal import UserDao 
 
 class SavingAccountDao:
     def __init__(self) -> None:
         self.cnx = Database.get_connection()
+        
 
-    def create_saving_account(self, balance: float, interestRate: float) -> int:
+    def create_saving_account(self, balance: float, interestRate: float,userID:int) -> int:
         query = """
-        INSERT INTO saving_accounts (balance, interest_rate)
-        VALUES (%s, %s);
+        INSERT INTO saving_accounts (balance, interest_rate, userid)
+        VALUES (%s, %s, %s);
         """
-        if self.cnx is not None:
-            cursor = self.cnx.cursor()
-            cursor.execute(query, (balance, interestRate))
-            self.cnx.commit()
-            return cursor.lastrowid  # type: ignore 
+        lst_user = UserDao().getusers()
+        if(any(user['id'] == userID  and user['isadmin'] != 1 for user in lst_user)):# type: ignore
+            if self.cnx is not None:
+                cursor = self.cnx.cursor()
+                cursor.execute(query, (balance, interestRate, userID))
+                self.cnx.commit()
+                return cursor.lastrowid  # type: ignore 
         return -1
 
     def getAllSavingAccounts(self) -> list[SavingAccount]:
@@ -70,13 +75,16 @@ class CheckingAccountDao:
     def __init__(self) -> None:
         self.cnx = Database.get_connection()
 
-    def create_checking_account(self, balance: float) -> int:
-        query = "INSERT INTO checking_accounts (balance) VALUES (%s);"
-        if self.cnx is not None:
-            cursor = self.cnx.cursor()
-            cursor.execute(query, (balance,))
-            self.cnx.commit()
-            return cursor.lastrowid # type: ignore
+    def create_checking_account(self, balance: float,userID:int) -> int:
+        query = "INSERT INTO checking_accounts (balance, userID) VALUES (%s, %s);"
+        
+        lst_user = UserDao().getusers()
+        if(any(user['id'] == userID  and user['isadmin'] != 1 for user in lst_user)):# type: ignore
+            if self.cnx is not None:
+                cursor = self.cnx.cursor()
+                cursor.execute(query, (balance,userID))
+                self.cnx.commit()
+                return cursor.lastrowid # type: ignore
         return -1
 
     def getAllCheckingAccounts(self) -> list[CheckingAccount]:
@@ -190,7 +198,8 @@ class TransactionDao:
 if __name__ == "__main__":
     database:Database = Database()
     database.get_connection()
-            
+    savingaccount = SavingAccountDao()
+    print(savingaccount.create_saving_account(1000, 0.05, 2))    
         
             
             

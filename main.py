@@ -3,7 +3,7 @@ import secrets
 
 
 
-from myapp.init import app
+from myapp import app
 
 from myapp.Controler.userControler import user
 from myapp.Controler.BankAccountControler import bankaccount

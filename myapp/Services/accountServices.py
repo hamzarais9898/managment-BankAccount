@@ -7,12 +7,14 @@ class SavingAccountService:
         self.dao = SavingAccountDao()
         self.transaction_dao = TransactionDao()
 
-    def create_account(self, balance: float, interest_rate: float) -> int:
+    def create_account(self, balance: float, interest_rate: float,userID:int) -> int:
         """Créer un compte d'épargne."""
         if balance < SavingAccount.SAVING_AMOUNT:
             raise ValueError("Le solde doit être supérieur ou égal à 100.")
         
-        account_id = self.dao.create_saving_account(balance, interest_rate)
+        account_id = self.dao.create_saving_account(balance, interest_rate,userID)
+        if(account_id == -1):
+            return -1    
         return account_id
     
     def getAllSavingAccounts(self) -> list[SavingAccount]:
@@ -117,14 +119,14 @@ class SavingAccountService:
         self.transaction_dao.create_transaction(
             account_id=source_account_id,
             account_type='Saving',
-            transaction_type='transfere out',
+            transaction_type='Transfer Out',
             amount=amount
         )
         
         self.transaction_dao.create_transaction(
             account_id=target_account_id,
             account_type='Saving',
-            transaction_type='transfere in',
+            transaction_type='Transfer In',
             amount=amount
         )
         
@@ -162,11 +164,13 @@ class CheckingAccountService:
         self.dao = CheckingAccountDao()
         self.transaction_dao = TransactionDao()
 
-    def create_account(self, balance: float) -> int:
+    def create_account(self, balance: float,userID:int) -> int:
         if balance < 0:
             raise ValueError("Le solde initial doit être positif.")
         
-        account_id = self.dao.create_checking_account(balance)
+        account_id = self.dao.create_checking_account(balance,userID)
+        if(account_id == -1):
+            return -1  
         return account_id
     
     def getAllCheckingAccounts(self) -> list[CheckingAccount]:

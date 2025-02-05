@@ -7,8 +7,10 @@ class UserManage:
         self.userDao=UserDao()
         
     def listUsers(self)->list[User]:
-        return self.userDao.getUsers()
+        return self.userDao.getusers()
     
     def auth(self,login:str,password:str)->User|None:
         return self.userDao.auth(login,password)    
 
+    def register(self,email:str,username:str,password:str)->bool:
+        return self.userDao.register(email,username,password)

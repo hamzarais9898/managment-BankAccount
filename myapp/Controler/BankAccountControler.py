@@ -25,9 +25,10 @@ import os
 def create_saving_account():
     balance = request.form['balance']
     interest_rate = request.form['interestRate']
-    saving_account_dao.create_account(float(balance),float(interest_rate))
-    return redirect(url_for('bankaccount.get_all_saving_accounts'))
-
+    userID = request.form['userID']
+    if(saving_account_dao.create_account(float(balance),float(interest_rate),int(userID))!= -1):
+        return redirect(url_for('bankaccount.get_all_saving_accounts'))
+    return "Erreur lors de la création du compte", 400
 @bankaccount.route('/saving_accounts', methods=['GET'])
 def get_all_saving_accounts():
     """Get all saving accounts."""
@@ -115,8 +116,10 @@ def transactions_saving_account():
 @bankaccount.route('/create_checking_account', methods=['POST'])
 def create_checking_account():
     balance = request.form['balance']
-    checking_account_dao.create_account(balance=float(balance))
-    return redirect(url_for('bankaccount.get_all_checking_accounts'))
+    userID = request.form['userID']
+    if(checking_account_dao.create_account(balance=float(balance),userID=int(userID))!= -1):
+        return redirect(url_for('bankaccount.get_all_checking_accounts'))
+    return "Erreur lors de la création du compte", 400
 
 @bankaccount.route('/checking_accounts', methods=['GET'])
 def get_all_checking_accounts():

@@ -32,8 +32,25 @@ def auth():
     if user == None:
         return render_template("authentication.html",error="Login or password incorrect")
     session["email"]=login
+    if user.isadmin == 0:
+        return render_template('accounts.html')
     listUsers = userService.listUsers()
     return render_template('Home.html',users=listUsers)
+
+@user.route("/register",methods=["POST"])
+def registerPost():
+    username = request.form.get("username")
+    email = request.form.get("email")
+    password = request.form.get("password")
+    ispass = userService.register(email,username,password)#type: ignore
+    if  ispass == False:
+        return render_template("register.html",error="erreur")
+    return render_template("authentication.html")
+        
+
+@user.route("/register")
+def register():
+    return render_template("register.html")
 
 @user.route("/accounts")
 def accounts():
