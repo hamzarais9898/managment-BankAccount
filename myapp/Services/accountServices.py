@@ -284,18 +284,20 @@ class CheckingAccountService:
         if not account:
             raise ValueError("Compte courant introuvable.")
         
-        fees = account.deductFees()
+        if(account.transaction_count > CheckingAccount.FREE_TRANSACTIONS):
+            fees = account.deductFees()
         
-        self.dao.update_balance(account_id, account.balance)
+            self.dao.update_balance(account_id, account.balance)
         
-        self.transaction_dao.create_transaction(
-            account_id=account_id,
-            account_type='Checking',
-            transaction_type='Fee',
-            amount= fees
-        )
-        
-        return fees
+            self.transaction_dao.create_transaction(
+                account_id=account_id,
+                account_type='Checking',
+                transaction_type='Fee',
+                amount= fees
+            )
+            
+            return fees
+        return -1
     
     def log_account(self, account_id:int)->list:
         try:

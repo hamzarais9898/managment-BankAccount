@@ -12,7 +12,7 @@ class UserDao:
         users:list[User]=[]
         query = "SELECT * FROM users;"
         if self.cnx != None :
-            cursor=self.cnx.cursor(dictionary=True) # type: ignore
+            cursor=self.cnx.cursor(dictionary=True) 
             cursor.execute(query)
             rows=cursor.fetchall()
             for row in rows : # type: ignore

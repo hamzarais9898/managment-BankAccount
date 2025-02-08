@@ -176,12 +176,14 @@ def transactions_checking_account():
         account_id = int(request.form['account_id'])
         amount = float(request.form['amount'])
         checking_account_dao.deposit(account_id,amount)
+        checking_account_dao.deduct_fees(account_id)
         return redirect(url_for('bankaccount.get_all_checking_accounts'))
     
     if transaction_type == 'withdraw':
         account_id = int(request.form['account_id'])
         amount = float(request.form['amount'])
         checking_account_dao.withdraw(account_id,amount)
+        checking_account_dao.deduct_fees(account_id)
         return redirect(url_for('bankaccount.get_all_checking_accounts'))
     
     if transaction_type == 'transfer':
@@ -189,11 +191,8 @@ def transactions_checking_account():
         amount = float(request.form['amount'])
         recipient_account = int(request.form['recipient_account'])
         checking_account_dao.transfer(account_id,recipient_account,amount)
-        return redirect(url_for('bankaccount.get_all_checking_accounts'))
-    
-    if transaction_type == 'deduct_fee':
-        account_id = int(request.form['account_id'])
         checking_account_dao.deduct_fees(account_id)
+        checking_account_dao.deduct_fees(recipient_account)
         return redirect(url_for('bankaccount.get_all_checking_accounts'))
     
     return "Invalid transaction type", 400

@@ -1,7 +1,4 @@
-from getpass import getuser
-import mysql.connector as my
 from myapp.Models.accountModel import * 
-from decimal import Decimal
 from myapp.Dal.cnxDal import Database
 from myapp.Dal.userDal import UserDao 
 
@@ -12,7 +9,7 @@ class SavingAccountDao:
 
     def create_saving_account(self, balance: float, interestRate: float,userID:int) -> int:
         query = """
-        INSERT INTO saving_accounts (balance, interest_rate, userid)
+        INSERT INTO saving_accounts (balance, interest_rate, userid) 
         VALUES (%s, %s, %s);
         """
         lst_user = UserDao().getusers()
@@ -33,7 +30,7 @@ class SavingAccountDao:
             rows = cursor.fetchall()
             for row in rows: # type: ignore
                 account=SavingAccount(interestRate=row['interest_rate'],balance=row['balance']) # type: ignore
-                account.account_id = row["id"]   # type: ignore # Utiliser les bons attributs
+                account.account_id = row['id']   # type: ignore # Utiliser les bons attributs
                 accounts.append(account)
         return accounts
 
@@ -199,7 +196,7 @@ if __name__ == "__main__":
     database:Database = Database()
     database.get_connection()
     savingaccount = SavingAccountDao()
-    print(savingaccount.create_saving_account(1000, 0.05, 2))    
+    print(savingaccount.getAllSavingAccounts())   
         
-            
+             
             

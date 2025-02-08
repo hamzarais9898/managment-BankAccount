@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from sqlite3 import Date
 from typing import Final
 from decimal import Decimal
 from dataclasses import dataclass
@@ -94,6 +95,6 @@ class Transactions:
     account_type:str
     transaction_type:str
     amount:float
-    transaction_date:str   
+    transaction_date:Date   
     
     
